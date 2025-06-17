@@ -20,3 +20,13 @@ crear model
 php artisan make:model  Product
 crear controller 
  php artisan make:controller ProductController
+
+
+
+extra : php artisan install:api
+
+
+Tarea : crear tabla que se relacione solo categoria puede ser 
+items 
+servicios 
+...
