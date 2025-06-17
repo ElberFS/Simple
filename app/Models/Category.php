@@ -18,4 +18,8 @@ class Category extends Model
 
     // Por defecto, Laravel maneja automáticamente 'created_at' y 'updated_at'.
     // No necesitas definir 'protected $casts' si solo tienes los timestamps básicos.
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
+
 }
