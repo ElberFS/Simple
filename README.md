@@ -81,6 +81,29 @@ END //
 DELIMITER ;
 
 
+--------------------------------------------------
+DELIMITER //
+
+-- Paso 1: Eliminar el procedimiento si ya existe
+DROP PROCEDURE IF EXISTS UpdateProductPrice;
+
+-- Paso 2: Crear el procedimiento
+CREATE PROCEDURE UpdateProductPrice(
+    IN productId BIGINT,
+    IN newPrice DECIMAL(8, 2)
+)
+BEGIN
+    -- Actualiza la tabla 'products'.
+    -- Establece el nuevo precio para el producto cuyo ID coincida con 'productId'.
+    UPDATE products
+    SET price = newPrice
+    WHERE id = productId;
+END //
+
+DELIMITER ;
+
+
+
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1

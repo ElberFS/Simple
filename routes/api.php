@@ -27,3 +27,4 @@ Route::put('products/{id}', [ProductController::class, 'update']);
 
 Route::get('/sp/categories/{name}', [StoredProcedureController::class, 'showCategoryByName']); // Ruta actualizada
 Route::get('/sp/categories/{categoryId}/products', [StoredProcedureController::class, 'listProductsInCategory']); // Ruta actualizada
+Route::put('/sp/products/{productId}/price', [StoredProcedureController::class, 'updateProductPriceSp']);

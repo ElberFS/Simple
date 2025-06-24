@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Para usar constantes de códigos de respuesta HTTP
 use Illuminate\Support\Facades\DB; // ¡Importante para interactuar con la base de datos directamente!
+use Illuminate\Support\Facades\Validator;
 
 // Este controlador manejará las llamadas a procedimientos almacenados relacionados con categorías.
 class StoredProcedureController extends Controller // Nombre de la clase actualizado
@@ -69,6 +70,36 @@ class StoredProcedureController extends Controller // Nombre de la clase actuali
                 'message' => 'Error retrieving products for category using stored procedure', // Error al recuperar productos para la categoría usando procedimiento almacenado
                 'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR); // HTTP 500 Internal Server Error
+        }
+    }
+
+    public function updateProductPriceSp(string $productId, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/', 
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error de validacion', 
+                'errors' => $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY); 
+        }
+
+        try {
+            $newPrice = $request->input('new_price');
+
+            DB::update('CALL UpdateProductPrice(?, ?)', [$productId, $newPrice]);
+
+            return response()->json([
+                'message' => 'actualizacion exitosa' 
+            ], Response::HTTP_OK); 
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error SP ',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR); 
         }
     }
 }
