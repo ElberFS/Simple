@@ -30,3 +30,61 @@ Tarea : crear tabla que se relacione solo categoria puede ser
 items 
 servicios 
 ...
+
+
+----------------------------------------------------------
+Procesos Almacenados 
+
+-- Cambiamos el delimitador para usar bloques de código
+DELIMITER //
+
+-- Eliminamos el procedimiento si ya existe
+DROP PROCEDURE IF EXISTS GetCategoryByName;
+
+-- Creamos el procedimiento almacenado
+CREATE PROCEDURE GetCategoryByName(
+    IN categoryName VARCHAR(255) -- Parámetro de entrada: nombre de la categoría
+)
+BEGIN
+    -- Seleccionamos todas las filas de la tabla 'categories'
+    -- donde el campo 'name' coincida con el parámetro,
+    -- usando COLLATE para asegurar una comparación sin distinción de mayúsculas/minúsculas
+    SELECT *
+    FROM categories
+    WHERE name COLLATE utf8mb4_unicode_ci = categoryName;
+END //
+
+-- Restauramos el delimitador por defecto
+DELIMITER ;
+
+
+-------------------------------------------
+
+-- Cambiar delimitador para permitir bloques BEGIN ... END
+DELIMITER //
+
+-- Eliminar el procedimiento si ya existe
+DROP PROCEDURE IF EXISTS GetProductsInCategory;
+
+-- Crear procedimiento que obtiene productos por categoría
+CREATE PROCEDURE GetProductsInCategory(
+    IN catId BIGINT -- Parámetro de entrada: ID de la categoría
+)
+BEGIN
+    -- Selecciona todos los productos cuya categoría sea igual al ID proporcionado
+    SELECT *
+    FROM products
+    WHERE category_id = catId;
+END //
+
+-- Restaurar delimitador normal
+DELIMITER ;
+
+
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=                   puerto ejemplo  : DB_PORT= 3307
+DB_DATABASE=               Nombre base de datos
+DB_USERNAME=root
+DB_PASSWORD=          contraseña
