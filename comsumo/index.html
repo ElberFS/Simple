@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumo de API Laravel</title>
+    <!-- Tailwind CSS CDN para estilos mejorados -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos básicos para la estructura, el resto con Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Fondo gris claro */
+            padding: 2rem;
+        }
+        .container-section {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* Esquinas redondeadas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            color: #374151;
+            box-sizing: border-box;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4f46e5; /* Indigo-600 en foco */
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-primary {
+            background-color: #4f46e5; /* Indigo-600 */
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca; /* Indigo-700 */
+        }
+        .message-box {
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        .message-box.success {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-800 */
+            border: 1px solid #34d399; /* Green-400 */
+        }
+        .message-box.error {
+            background-color: #fee2e2; /* Red-100 */
+            color: #991b1b; /* Red-800 */
+            border: 1px solid #ef4444; /* Red-400 */
+        }
+        .error-list {
+            color: #dc2626; /* Red-600 */
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            list-style: disc;
+            padding-left: 1.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-indigo-800 mb-10">Gestión de Datos con Laravel API</h1>
+
+        <!-- Sección para Registrar Categorías -->
+        <div class="container-section">
+            <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Registrar Nueva Categoría</h2>
+            <form id="category-form" class="space-y-4">
+                <div class="form-group">
+                    <label for="category-name">Nombre de la Categoría:</label>
+                    <input type="text" id="category-name" name="name" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div class="form-group">
+                    <label for="category-description">Descripción (opcional):</label>
+                    <textarea id="category-description" name="description" rows="3"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Registrar Categoría</button>
+                <div id="category-message" class="message-box hidden"></div>
+            </form>
+        </div>
+
+        <!-- Sección para Registrar Productos -->
+        <div class="container-section">
+            <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Registrar Nuevo Producto</h2>
+            <form id="product-form" class="space-y-4">
+                <div class="form-group">
+                    <label for="product-name">Nombre del Producto:</label>
+                    <input type="text" id="product-name" name="name" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Descripción (opcional):</label>
+                    <textarea id="product-description" name="description" rows="3"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Precio:</label>
+                    <input type="number" id="product-price" name="price" step="0.01" min="0" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Categoría:</label>
+                    <select id="product-category" name="category_id" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Seleccione una categoría</option>
+                        <!-- Las categorías se cargarán aquí dinámicamente -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Registrar Producto</button>
+                <div id="product-message" class="message-box hidden"></div>
+            </form>
+        </div>
+
+        <!-- Sección para Mostrar Categorías -->
+        <div class="container-section">
+            <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Categorías Existentes</h2>
+            <div id="categories-container" class="text-gray-700">
+                <p>Cargando categorías...</p>
+            </div>
+        </div>
+
+        <!-- Sección para Mostrar Productos -->
+        <div class="container-section">
+            <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Productos Existentes</h2>
+            <div id="products-container" class="text-gray-700">
+                <p>Cargando productos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
