@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Categorías y Productos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f3f4f6;
+            color: #374151;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            text-align: center;
+            color: #4f46e5;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #4338ca;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 0.5rem;
+        }
+        .container-section {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+        .form-group div {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            color: #374151;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            margin-right: 0.5rem;
+        }
+        .form-group button:hover {
+            background-color: #4338ca;
+        }
+        .form-group button.cancel-btn {
+            background-color: #ef4444;
+        }
+        .form-group button.cancel-btn:hover {
+            background-color: #dc2626;
+        }
+        .message-box {
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            display: none;
+            font-weight: 500;
+        }
+        .message-box p {
+            margin: 0;
+            padding: 0;
+        }
+        .message-box ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        .message-box li {
+            margin-bottom: 0.25rem;
+        }
+        .message-box.success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .message-box.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .list-item {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .list-item strong {
+            color: #1f2937;
+        }
+        .list-item .actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .list-item .actions button.edit-btn {
+            background-color: #f59e0b;
+            color: white;
+            border: none;
+        }
+        .list-item .actions button.edit-btn:hover {
+            background-color: #d97706;
+        }
+        .list-item .actions button.delete-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+        }
+        .list-item .actions button.delete-btn:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Gestión de Categorías y Productos</h1>
+
+        <div class="container-section">
+            <h2>Registrar Nueva Categoría</h2>
+            <form id="category-form" class="form-group">
+                <input type="hidden" id="category-id">
+                <div>
+                    <label for="category-name">Nombre de la Categoría:</label>
+                    <input type="text" id="category-name" name="name" required>
+                </div>
+                <div>
+                    <label for="category-description">Descripción:</label>
+                    <textarea id="category-description" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit" id="category-submit-btn">Registrar Categoría</button>
+                <button type="button" id="category-cancel-btn" class="cancel-btn" style="display:none;">Cancelar Edición</button>
+                <div id="category-message" class="message-box"></div>
+            </form>
+        </div>
+
+        <div class="container-section">
+            <h2>Categorías Existentes</h2>
+            <div id="categories-container">
+                <p>Cargando categorías...</p>
+            </div>
+        </div>
+
+        <h1 style="margin-top: 4rem;">Registrar Nuevo Producto</h1>
+        <div class="container-section">
+            <h2>Formulario de Producto</h2>
+            <form id="product-form" class="form-group">
+                <input type="hidden" id="product-id">
+                <div>
+                    <label for="product-name">Nombre del Producto:</label>
+                    <input type="text" id="product-name" name="name" required>
+                </div>
+                <div>
+                    <label for="product-description">Descripción:</label>
+                    <textarea id="product-description" name="description" rows="3"></textarea>
+                </div>
+                <div>
+                    <label for="product-price">Precio:</label>
+                    <input type="number" id="product-price" name="price" step="0.01" required>
+                </div>
+                <div>
+                    <label for="product-category">Categoría:</label>
+                    <select id="product-category" name="category_id" required>
+                        <option value="">Cargando categorías...</option>
+                    </select>
+                </div>
+                <button type="submit" id="product-submit-btn">Registrar Producto</button>
+                <button type="button" id="product-cancel-btn" class="cancel-btn" style="display:none;">Cancelar Edición</button>
+                <div id="product-message" class="message-box"></div>
+            </form>
+        </div>
+
+        <div class="container-section">
+            <h2>Productos Existentes</h2>
+            <div id="products-container">
+                <p>Cargando productos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

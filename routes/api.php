@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController; 
-use App\Http\Controllers\ProductController; 
-use App\Http\Controllers\StoredProcedureController; 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StoredProcedureController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,11 +20,9 @@ Route::get('products', [ProductController::class, 'index']);
 Route::post('products', [ProductController::class, 'store']);
 Route::get('products/{id}', [ProductController::class, 'show']);
 Route::put('products/{id}', [ProductController::class, 'update']);
+// ¡Añade esta línea!
+Route::delete('products/{id}', [ProductController::class, 'destroy']); // <-- ¡Esta es la clave!
 
-
-
-
-
-Route::get('/sp/categories/{name}', [StoredProcedureController::class, 'showCategoryByName']); // Ruta actualizada
-Route::get('/sp/categories/{categoryId}/products', [StoredProcedureController::class, 'listProductsInCategory']); // Ruta actualizada
+Route::get('/sp/categories/{name}', [StoredProcedureController::class, 'showCategoryByName']);
+Route::get('/sp/categories/{categoryId}/products', [StoredProcedureController::class, 'listProductsInCategory']);
 Route::put('/sp/products/{productId}/price', [StoredProcedureController::class, 'updateProductPriceSp']);

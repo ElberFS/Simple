@@ -10,7 +10,9 @@
 4.- ingresan a su proyecto desde el terminar y ejecutan -> composer install
 5.- terminado la instacion en terminal ejecutan -> php artisan key:generate
 6.- migro mis tablas -> php artisan migrate
-
+7. ejecutar :  php artisan serve
+(si tiene proyecto no es una api y tiene fronted)
+8.- frontend , segundo comando  :  composer run dev 
 
 
 /* *********************************** */

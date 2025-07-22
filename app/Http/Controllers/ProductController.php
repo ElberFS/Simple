@@ -13,7 +13,7 @@ class ProductController extends Controller
         try{
             $products = Product::with('category')->get();
             return response()->json([
-                'message' => 'Productos recuperados correptamente',
+                'message' => 'Productos recuperados correctamente',
                 'data' => $products
             ],Response::HTTP_OK);
         }catch (\Exception $e){
@@ -34,7 +34,7 @@ class ProductController extends Controller
 
         if ($validator->fails()){
             return response()->json([
-                'message' => 'Error de validacion',
+                'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -42,7 +42,7 @@ class ProductController extends Controller
         try{
             $product = Product::create($request->all());
             return response()->json([
-                'message' => 'Productos creados correptamente',
+                'message' => 'Producto creado correctamente',
                 'data' => $product
             ],Response::HTTP_CREATED);
         }catch (\Exception $e){
@@ -53,37 +53,37 @@ class ProductController extends Controller
         }
     }
 
-    public function  show(string $id){
+    public function show(string $id){
         try{
             $product = Product::with('category')->find($id);
             if(!$product){
                 return response()->json([
-                'message' => 'Productos no enconrtrado'
+                'message' => 'Producto no encontrado'
                 ],Response::HTTP_NOT_FOUND);
             }
             return response()->json([
-                'message' => 'Productos recuperado correptamente',
+                'message' => 'Producto recuperado correctamente',
                 'data' => $product
             ],Response::HTTP_OK);
         }catch(\Exception $e){
-            return response()->json(['recuperar  producto',
+            return response()->json([
+                'message' => 'Error al recuperar producto', // Changed for clarity
                 'error' => $e->getMessage()
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    } 
+    }
 
     public function update(Request $request, string $id){
-
         $product = Product::find($id);
         if(!$product){
-                return response()->json([
-                'message' => 'Productos no enconrtrado'
-                ],Response::HTTP_NOT_FOUND);
+            return response()->json([
+                'message' => 'Producto no encontrado'
+            ],Response::HTTP_NOT_FOUND);
         }
 
-
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string|max:255|unique:products,name' . $id,
+            // Corrected unique rule: ignore the current product's ID
+            'name' => 'required|string|max:255|unique:products,name,' . $id,
             'description'=> 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
@@ -91,7 +91,7 @@ class ProductController extends Controller
 
         if ($validator->fails()){
             return response()->json([
-                'message' => 'Error de validacion',
+                'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -99,7 +99,7 @@ class ProductController extends Controller
         try{
             $product->update($request->all());
             return response()->json([
-                'message' => 'Productos actualizado correptamente',
+                'message' => 'Producto actualizado correctamente',
                 'data' => $product
             ],Response::HTTP_OK);
         }catch (\Exception $e){
@@ -110,4 +110,27 @@ class ProductController extends Controller
         }
     }
 
+    public function destroy(string $id)
+    {
+        try {
+            $product = Product::find($id);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Producto no encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $product->delete();
+
+            return response()->json([
+                'message' => 'Producto eliminado correctamente'
+            ], Response::HTTP_NO_CONTENT); // 204 No Content for successful deletion
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al eliminar producto',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
